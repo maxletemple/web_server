@@ -18,7 +18,7 @@ find_package(Qt5 COMPONENTS
         Widgets
         Network
         REQUIRED)
-add_executable(web_server main.cpp)
+add_executable(web_server main.cpp Dialog.cpp Dialog.h ClientSocket.cpp ClientSocket.h ServerSocket.cpp ServerSocket.h)
 target_link_libraries(web_server
         Qt5::Core
         Qt5::Widgets
