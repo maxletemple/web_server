@@ -78,6 +78,7 @@ void ClientSocket::run(){
         tcpSocket.write("<html><body><h1>404 Not Found</h1></body></html>\r\n");
     } else if (dir.exists()){
         //List directory
+
     } else if (file.exists()){
         //Send file
 

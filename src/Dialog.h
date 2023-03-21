@@ -8,7 +8,7 @@
 
 #include <QDialog>
 #include <QLabel>
-#include "ServerSocket.h"
+#include "network/ServerSocket.h"
 
 class Dialog : public QDialog{
     Q_OBJECT
