@@ -12,6 +12,7 @@ class Response {
 protected:
     QByteArray content;
     QString mimeType;
+    QString path;
     int lastUsed;
 
 protected:
@@ -19,7 +20,7 @@ protected:
 
 public:
     virtual bool isCachable();
-
+    QString getPath();
     Response();
 };
 

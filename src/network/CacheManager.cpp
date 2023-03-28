@@ -6,16 +6,21 @@
 
 CacheManager::CacheManager() {
     this->cache = QMap<QString, Response>();
+    this->cacheOrder = QVector<QString>();
 }
 
 Response CacheManager::getFromCache(QString path) {
     return this->cache.value(path);
 }
 
-void CacheManager::addToCache(QString path, Response response) {
+void CacheManager::addToCache(Response response) {
     if (this->cache.size() >= CACHE_SIZE) {
         this->cache.remove(this->cacheOrder.first());
         this->cacheOrder.removeFirst();
     }
 
+}
+
+bool CacheManager::isInCache(QString path) {
+    return this->cache.contains(path);
 }

@@ -16,7 +16,8 @@ private:
 public:
     CacheManager();
     Response getFromCache(QString path);
-    void addToCache(QString path, Response response);
+    void addToCache(Response response);
+    bool isInCache(QString path);
 };
 
 
