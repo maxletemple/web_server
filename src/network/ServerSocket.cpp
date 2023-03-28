@@ -16,5 +16,7 @@ void ServerSocket::incomingConnection(qintptr socketDescriptor) {
 
     clientSocket->start();
 
+    cacheManager = CacheManager();
+
     cout << "ServerSocket::incomingConnection() finished" << endl;
 }

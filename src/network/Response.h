@@ -16,11 +16,14 @@ protected:
     int lastUsed;
 
 protected:
-    Response(QString mimeType, QByteArray content);
+    Response(QString mimeType, QString path);
 
 public:
     virtual bool isCachable();
+    virtual bool isScript();
     QString getPath();
+    QByteArray getContent();
+    QString getMimeType();
     Response();
 };
 

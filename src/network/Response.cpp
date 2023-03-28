@@ -9,12 +9,28 @@ bool Response::isCachable() {
     return false;
 }
 
-Response::Response() {
-    this->mimeType = "text/plain";
-    this->content = "none";
+bool Response::isScript() {
+    return false;
 }
 
-Response::Response(QString mimeType, QByteArray content) {
+QString Response::getPath(){
+    return this->path;
+}
+
+QString Response::mimeType(){
+    return this->mimeType;
+}
+
+QByteArray Response::getContent(){
+    return this->content;
+}
+
+Response::Response() {
+    this->mimeType = "text/plain";
+    this->path = "none";
+}
+
+Response::Response(QString mimeType, QString path) {
     this->mimeType = mimeType;
-    this->content = content;
+    this->path = path;
 }

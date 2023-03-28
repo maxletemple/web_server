@@ -9,6 +9,13 @@ bool RespFile::isCachable() {
     return true;
 }
 
-RespFile::RespFile(QString mimeType, QByteArray content) : Response(mimeType, content) {
-
+RespFile::RespFile(QString mimeType, QString path) : Response(mimeType, path) {
+    QFile* file = new QFile( path );
+     if (!file->open(QIODevice::ReadOnly))
+     {
+             delete file;
+             return;
+     }
+    this->content = file->readAll();
+    file->close();
 }

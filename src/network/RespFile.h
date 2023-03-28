@@ -10,7 +10,7 @@
 
 class RespFile : public Response{
 public:
-    RespFile(QString mimeType, QByteArray content);
+    RespFile(QString mimeType, QString path);
     virtual bool isCachable();
 };
 
