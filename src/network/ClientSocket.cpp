@@ -6,6 +6,8 @@
 #include <QtNetwork>
 #include "ClientSocket.h"
 #include "iostream"
+#include "RequestManager.h"
+
 ClientSocket::ClientSocket(int socketDescriptor, QObject *parent) : QThread(parent), socketDescriptor(socketDescriptor){
 }
 
@@ -20,6 +22,7 @@ inline string removeEndLine(string s){
 void ClientSocket::run(){
     cout << "ClientSocket::run() called" << endl;
     QTcpSocket tcpSocket;
+    RequestManager requestManager = RequestManager();
 
     if(!tcpSocket.setSocketDescriptor(socketDescriptor)){
         emit error(tcpSocket.error());
@@ -36,7 +39,10 @@ void ClientSocket::run(){
     char buffer[65536];
     tcpSocket.readLine(buffer, sizeof(buffer));
 
-    string line(buffer);
+    QByteArray response = requestManager.getResponse(QString(buffer));
+    tcpSocket.write(response);
+
+    /*string line(buffer);
     line = removeEndLine(line);
 
     cout << "COMMAND: " << line << "<=" << endl;
@@ -54,16 +60,16 @@ void ClientSocket::run(){
 
     cout << "3. : " << path << endl;
     cout << "4. : " << line << endl;
-
-    while( tcpSocket.bytesAvailable() > 0 ) {
+    */
+    /*while( tcpSocket.bytesAvailable() > 0 ) {
         int lineLength = tcpSocket.readLine(buffer, 65536);
         if (lineLength != -1 && lineLength != 0) {
             //cout << "C" << lineLength << " :: " << tampon;
         } else if (lineLength != -1) {
             cout << "Nothing for the moment !" << endl;
         }
-    }
-    QString str = tr("./public_html") + tr(path.c_str());
+    }*/
+    /*QString str = tr("./public_html") + tr(path.c_str());
     QFile file(str);
     QDir dir(str);
 
@@ -95,7 +101,7 @@ void ClientSocket::run(){
         }
 
         file.close();
-    }
+    }*/
 
     tcpSocket.disconnectFromHost();
     tcpSocket.waitForDisconnected();

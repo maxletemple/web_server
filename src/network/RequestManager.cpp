@@ -18,7 +18,10 @@ QByteArray RequestManager::getResponse(QString request) {
     cout << "Path   : " << requestParts[1].toStdString() << endl;
     cout << "HTTP   : " << requestParts[2].toStdString() << endl;
 
-
-
-    return QByteArray();
+    QString response = "HTTP/1.1 200 OK\r\n"
+                       "Content-Type: text/html\r\n"
+                       "Content-Length: 12\r\n"
+                       "\r\n"
+                       "Hello World!";
+    return response.toUtf8();
 }

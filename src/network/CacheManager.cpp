@@ -14,13 +14,8 @@ Response CacheManager::getFromCache(QString path) {
 
 void CacheManager::addToCache(QString path, Response response) {
     if (this->cache.size() >= CACHE_SIZE) {
-        // Remove oldest item
         this->cache.remove(this->cacheOrder.first());
         this->cacheOrder.removeFirst();
     }
-    if (this->cacheOrder.contains(path)) {
-        this->cacheOrder.removeOne(path);
-    }
-    this->cache.insert(path, response);
-    this->cacheOrder.append(path);
+
 }
