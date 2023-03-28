@@ -8,17 +8,16 @@
 #include "Response.h"
 #include "RespDir.h"
 #include "RespFile.h"
+#include "CacheManager.h"
 
 using namespace std;
-
-extern CacheManager ServerSocket::cacheManager;
 
 RequestManager::RequestManager() {
 
 }
 
 inline QString findMimeType(QString path){
-    return "text/html";
+    return "image/jpeg";
 }
 
 QByteArray RequestManager::getResponse(QString request) {
@@ -30,7 +29,7 @@ QByteArray RequestManager::getResponse(QString request) {
     cout << "HTTP   : " << requestParts[2].toStdString() << endl;
 
     Response response;
-    QString path = "./public.html" + requestParts[1];
+    QString path = "./public_html" + requestParts[1];
     if (cacheManager.isInCache(path)){
         response = cacheManager.getFromCache(path);
     } else{
@@ -47,7 +46,7 @@ QByteArray RequestManager::getResponse(QString request) {
         } else if (d.exists()){
             response = RespDir(path);
         } else if (f.exists()){
-            QString fileMimetype = findMimeType(path);
+            QString fileMimeType = findMimeType(path);
             response = RespFile(fileMimeType, path);
         }
 
@@ -58,7 +57,7 @@ QByteArray RequestManager::getResponse(QString request) {
                    "Content-Type: " + response.getMimeType() + ";charset=UTF-8\r\n"
                           "\r\n";
 
-    QByteArray ret = QByteArray(head);
+    QByteArray ret = QByteArray().append(head.toUtf8());
     ret.append(response.getContent());
 
     return ret;

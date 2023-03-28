@@ -13,8 +13,6 @@ class ServerSocket : public QTcpServer{
     Q_OBJECT;
 
 public:
-
-    static CacheManager cacheManager;
     ServerSocket(QObject *parent = 0);
 
 protected:

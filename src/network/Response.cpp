@@ -17,7 +17,7 @@ QString Response::getPath(){
     return this->path;
 }
 
-QString Response::mimeType(){
+QString Response::getMimeType(){
     return this->mimeType;
 }
 

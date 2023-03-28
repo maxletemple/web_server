@@ -20,5 +20,6 @@ public:
     bool isInCache(QString path);
 };
 
+static CacheManager cacheManager;
 
 #endif //WEB_SERVER_CACHEMANAGER_H
