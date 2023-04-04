@@ -18,6 +18,8 @@ void CacheManager::addToCache(Response response) {
         this->cache.remove(this->cacheOrder.first());
         this->cacheOrder.removeFirst();
     }
+    this->cache.insert(response.getPath(), response);
+    this->cacheOrder.append(response.getPath());
 
 }
 

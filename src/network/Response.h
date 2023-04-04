@@ -13,14 +13,13 @@ protected:
     QByteArray content;
     QString mimeType;
     QString path;
-    int lastUsed;
 
 protected:
+    Response(QString path);
     Response(QString mimeType, QString path);
 
 public:
     virtual bool isCachable();
-    virtual bool isScript();
     QString getPath();
     QByteArray getContent();
     QString getMimeType();

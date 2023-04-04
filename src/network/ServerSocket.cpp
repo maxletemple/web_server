@@ -5,6 +5,7 @@
 #include "ServerSocket.h"
 #include "ClientSocket.h"
 #include "CacheManager.h"
+#include "Statistics.h"
 
 ServerSocket::ServerSocket(QObject *parent) : QTcpServer(parent) {
 }
@@ -18,6 +19,7 @@ void ServerSocket::incomingConnection(qintptr socketDescriptor) {
     clientSocket->start();
 
     cacheManager = CacheManager();
+    statistics = Statistics();
 
     cout << "ServerSocket::incomingConnection() finished" << endl;
 }

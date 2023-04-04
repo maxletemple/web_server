@@ -4,12 +4,11 @@
 
 #include "RespFile.h"
 
-
 bool RespFile::isCachable() {
     return true;
 }
 
-RespFile::RespFile(QString mimeType, QString path) : Response(mimeType, path) {
+RespFile::RespFile(QString path) : Response(path) {
     QFile* file = new QFile( path );
      if (!file->open(QIODevice::ReadOnly))
      {

@@ -3,20 +3,12 @@
 //
 
 #include <QTcpSocket>
-#include <QtNetwork>
+#include "Statistics.h"
 #include "ClientSocket.h"
 #include "iostream"
 #include "RequestManager.h"
 
 ClientSocket::ClientSocket(int socketDescriptor, QObject *parent) : QThread(parent), socketDescriptor(socketDescriptor){
-}
-
-inline string removeEndLine(string s){
-    while( s.at(s.length()-1) == '\r' ||
-           s.at(s.length()-1) == '\n' ){
-        s = s.substr(0, s.length()-1);
-    }
-    return s;
 }
 
 void ClientSocket::run(){
@@ -38,7 +30,7 @@ void ClientSocket::run(){
 
     char buffer[65536];
     tcpSocket.readLine(buffer, sizeof(buffer));
-
+    statistics.newRequestRx(tcpSocket.peerAddress().toString(), QString(buffer));
     QByteArray response = requestManager.getResponse(QString(buffer));
     tcpSocket.write(response);
 

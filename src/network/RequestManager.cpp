@@ -4,11 +4,13 @@
 
 #include "RequestManager.h"
 #include  <iostream>
-#include "ServerSocket.h"
 #include "Response.h"
 #include "RespDir.h"
 #include "RespFile.h"
+#include "Resp404.h"
 #include "CacheManager.h"
+#include "RespScript.h"
+#include "Statistics.h"
 
 using namespace std;
 
@@ -16,8 +18,9 @@ RequestManager::RequestManager() {
 
 }
 
-inline QString findMimeType(QString path){
-    return "image/jpeg";
+inline bool isScript(QString path){
+    QFileInfo fileInfo(path);
+    return fileInfo.isExecutable();
 }
 
 QByteArray RequestManager::getResponse(QString request) {
@@ -32,6 +35,7 @@ QByteArray RequestManager::getResponse(QString request) {
     QString path = "./public_html" + requestParts[1];
     if (cacheManager.isInCache(path)){
         response = cacheManager.getFromCache(path);
+        cout << path.toStdString() <<"is already in cache" << endl;
     } else{
         QFile f(path);
         QDir d(path);
@@ -42,15 +46,19 @@ QByteArray RequestManager::getResponse(QString request) {
 
 
         if (!f.exists() && !d.exists()){
-            // CHARGER ERREUR 404
+            response = Resp404();
         } else if (d.exists()){
             response = RespDir(path);
         } else if (f.exists()){
-            QString fileMimeType = findMimeType(path);
-            response = RespFile(fileMimeType, path);
+            if (isScript(path)) {
+                response = RespScript(path);
+            } else {
+                response = RespFile(path);
+            }
         }
-
-        cacheManager.addToCache(response);
+        if (response.isCachable()) {
+            cacheManager.addToCache(response);
+        }
     }
 
     QString head = "HTTP/1.1 200 OK\r\n"
@@ -59,7 +67,8 @@ QByteArray RequestManager::getResponse(QString request) {
 
     QByteArray ret = QByteArray().append(head.toUtf8());
     ret.append(response.getContent());
-
+    statistics.newRequestTx(ret);
+    statistics.newFileDl(response);
     return ret;
 }
 
