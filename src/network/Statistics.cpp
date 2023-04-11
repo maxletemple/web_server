@@ -5,6 +5,7 @@
 #include "Statistics.h"
 #include "Resp404.h"
 #include "RespDir.h"
+#include "iostream"
 
 int Statistics::getNbRequestsRx() {
     return nbRequestsRx;
@@ -23,6 +24,7 @@ int Statistics::getNbBytesRx() {
 }
 
 int Statistics::getNbBytesTx() {
+
     return nbBytesTx;
 }
 
@@ -56,6 +58,7 @@ void Statistics::newFileDl(Response response) {
 }
 
 Statistics::Statistics() {
+    std::cout << "Statistics created" << std::endl;
     nbRequestsRx = 0;
     nbRequestsTx = 0;
     nb404 = 0;

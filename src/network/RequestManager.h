@@ -6,6 +6,7 @@
 #define WEB_SERVER_REQUESTMANAGER_H
 
 #include <QtCore>
+#include <QtNetwork>
 
 class RequestManager {
 private:
@@ -13,7 +14,7 @@ private:
 
 public:
     RequestManager();
-    QByteArray getResponse(QString request);
+    QByteArray getResponse(QString request, QHostAddress ip);
 };
 
 

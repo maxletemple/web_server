@@ -18,8 +18,11 @@ public:
     Response getFromCache(QString path);
     void addToCache(Response response);
     bool isInCache(QString path);
-};
 
-static CacheManager cacheManager;
+    static CacheManager& getInstance() {
+        static CacheManager instance;
+        return instance;
+    }
+};
 
 #endif //WEB_SERVER_CACHEMANAGER_H

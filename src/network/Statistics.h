@@ -32,8 +32,12 @@ public:
     void newRequestTx(QByteArray content);
     void newFileDl(Response response);
 
+    static Statistics& getInstance() {
+        static Statistics instance;
+        return instance;
+    }
+
 };
 
-static Statistics statistics;
 
 #endif //WEB_SERVER_STATISTICS_H

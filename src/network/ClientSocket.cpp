@@ -30,8 +30,8 @@ void ClientSocket::run(){
 
     char buffer[65536];
     tcpSocket.readLine(buffer, sizeof(buffer));
-    statistics.newRequestRx(tcpSocket.peerAddress().toString(), QString(buffer));
-    QByteArray response = requestManager.getResponse(QString(buffer));
+    Statistics::getInstance().newRequestRx(tcpSocket.peerAddress().toString(), QString(buffer));
+    QByteArray response = requestManager.getResponse(QString(buffer), tcpSocket.peerAddress());
     tcpSocket.write(response);
 
     /*string line(buffer);

@@ -6,7 +6,6 @@
 #define WEB_SERVER_SERVERSOCKET_H
 
 #include <QTcpServer>
-#include "CacheManager.h"
 
 
 class ServerSocket : public QTcpServer{

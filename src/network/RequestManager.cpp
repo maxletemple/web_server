@@ -8,9 +8,12 @@
 #include "RespDir.h"
 #include "RespFile.h"
 #include "Resp404.h"
+#include "RespStats.h"
 #include "CacheManager.h"
 #include "RespScript.h"
 #include "Statistics.h"
+#include "QHostAddress"
+#include "Resp403.h"
 
 using namespace std;
 
@@ -23,7 +26,7 @@ inline bool isScript(QString path){
     return fileInfo.isExecutable();
 }
 
-QByteArray RequestManager::getResponse(QString request) {
+QByteArray RequestManager::getResponse(QString request, QHostAddress ip) {
     request = request.trimmed();
     QStringList requestParts = request.split(" ");
 
@@ -32,44 +35,57 @@ QByteArray RequestManager::getResponse(QString request) {
     cout << "HTTP   : " << requestParts[2].toStdString() << endl;
 
     Response response;
-    QString path = "./public_html" + requestParts[1];
-    if (cacheManager.isInCache(path)){
-        response = cacheManager.getFromCache(path);
-        cout << path.toStdString() <<"is already in cache" << endl;
-    } else{
-        QFile f(path);
-        QDir d(path);
 
-        cout << " - Chemin du fichier : " << path.toStdString() << endl;
-        cout << " - isFile :          : " << f.exists() << endl;
-        cout << " - isDirectory       : " << d.exists() << endl;
+    QString path;
+    if (requestParts[1].startsWith("/private")) {
+        if (ip == QHostAddress::LocalHostIPv6) {
+            path = "." + requestParts[1];
+        } else {
+            response = Resp403();
+        }
+    } else {
+        path = "./public_html" + requestParts[1];
+    }
+    if (CacheManager::getInstance().isInCache(path)) {
+        response = CacheManager::getInstance().getFromCache(path);
+        cout << path.toStdString() << "is already in cache" << endl;
+    } else {
+        if (typeid(response) != typeid(Resp403))
+        {
+            QFile f(path);
+            QDir d(path);
 
+            cout << " - Chemin du fichier : " << path.toStdString() << endl;
+            cout << " - isFile :          : " << f.exists() << endl;
+            cout << " - isDirectory       : " << d.exists() << endl;
 
-        if (!f.exists() && !d.exists()){
-            response = Resp404();
-        } else if (d.exists()){
-            response = RespDir(path);
-        } else if (f.exists()){
-            if (isScript(path)) {
-                response = RespScript(path);
-            } else {
-                response = RespFile(path);
+            if (!f.exists() && !d.exists()) {
+                response = Resp404();
+            } else if (d.exists()) {
+                response = RespDir(path);
+            } else if (f.exists()) {
+                if (isScript(path)) {
+                    response = RespScript(path);
+                } else if (path == "./private/statistics.html")
+                {
+                    response = RespStats();
+                }
+                else {
+                    response = RespFile(path);
+                }
             }
         }
-        if (response.isCachable()) {
-            cacheManager.addToCache(response);
-        }
     }
-
+    if (response.isCachable()) {
+        CacheManager::getInstance().addToCache(response);
+    }
     QString head = "HTTP/1.1 200 OK\r\n"
                    "Content-Type: " + response.getMimeType() + ";charset=UTF-8\r\n"
-                          "\r\n";
-
+                                                               "\r\n";
     QByteArray ret = QByteArray().append(head.toUtf8());
     ret.append(response.getContent());
-    statistics.newRequestTx(ret);
-    statistics.newFileDl(response);
+    Statistics::getInstance().newRequestTx(ret);
+    Statistics::getInstance().newFileDl(response);
     return ret;
 }
-
 
