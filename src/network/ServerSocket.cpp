@@ -4,8 +4,6 @@
 
 #include "ServerSocket.h"
 #include "ClientSocket.h"
-#include "CacheManager.h"
-#include "Statistics.h"
 
 ServerSocket::ServerSocket(QObject *parent) : QTcpServer(parent) {
 }

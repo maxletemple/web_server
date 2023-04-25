@@ -11,7 +11,6 @@
 class RespFile : public Response{
 public:
     RespFile(QString path);
-    virtual bool isCachable();
 };
 
 

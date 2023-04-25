@@ -45,14 +45,12 @@ void Statistics::newRequestTx(QByteArray content) {
     nbBytesTx += content.size()*sizeof(char);
 }
 
-void Statistics::newFileDl(Response response) {
-    if (typeid(response) == typeid(Resp404)){
-        nb404++;
-    } else if (typeid(response) != typeid(RespDir)) {
-        if (filesDl.contains(response.getPath())) {
-            filesDl.insert(response.getPath(), filesDl.value(response.getPath()) + 1);
+void Statistics::newFileDl(Response* response) {
+    if (typeid(*response) != typeid(RespDir)) {
+        if (filesDl.contains(response->getPath())) {
+            filesDl.insert(response->getPath(), filesDl.value(response->getPath()) + 1);
         } else {
-            filesDl.insert(response.getPath(), 1);
+            filesDl.insert(response->getPath(), 1);
         }
     }
 }
@@ -62,9 +60,43 @@ Statistics::Statistics() {
     nbRequestsRx = 0;
     nbRequestsTx = 0;
     nb404 = 0;
+    nb403 = 0;
     nbBytesRx = 0;
     nbBytesTx = 0;
     filesDl = QMap<QString, int>();
     requests = QVector<QString>();
     clients = QMap<QString, int>();
+    enableServ = true;
+}
+
+void Statistics::new404() {
+    nb404++;
+}
+
+void Statistics::new403() {
+    nb403++;
+}
+
+int Statistics::getNb403() {
+    return nb403;
+}
+
+QMap<QString, int> Statistics::getFilesDl() {
+    return filesDl;
+}
+
+QVector<QString> Statistics::getRequests() {
+    return requests;
+}
+
+QMap<QString, int> Statistics::getClients() {
+    return clients;
+}
+
+bool Statistics::isEnableServ() const {
+    return enableServ;
+}
+
+void Statistics::setEnableServ(bool enableServ) {
+    Statistics::enableServ = enableServ;
 }

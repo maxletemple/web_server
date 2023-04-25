@@ -13,6 +13,7 @@ protected:
     QByteArray content;
     QString mimeType;
     QString path;
+    bool cachable;
 
 protected:
     Response(QString path);

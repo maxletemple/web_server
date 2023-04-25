@@ -2,6 +2,7 @@
 // Created by mletemple on 21/03/23.
 //
 
+#include <iostream>
 #include "Response.h"
 
 inline QString findMimeType(QString path){
@@ -19,7 +20,8 @@ inline QString findMimeType(QString path){
 }
 
 bool Response::isCachable() {
-    return false;
+    std::cout << "Is " << this->path.toStdString() << " cachable? " << this->cachable << std::endl;
+    return cachable;
 }
 
 
@@ -38,14 +40,17 @@ QByteArray Response::getContent(){
 Response::Response() {
     this->mimeType = "text/plain";
     this->path = "none";
+    this->cachable = false;
 }
 
 Response::Response(QString path) {
     this->mimeType = findMimeType(path);
     this->path = path;
+    this->cachable = false;
 }
 
 Response::Response(QString mimeType, QString path) {
     this->mimeType = mimeType;
     this->path = path;
+    this->cachable = false;
 }

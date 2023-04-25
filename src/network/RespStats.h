@@ -15,5 +15,4 @@ public:
     RespStats();
 };
 
-
 #endif //WEB_SERVER_RESPSTATS_H
